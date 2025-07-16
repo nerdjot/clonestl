@@ -30,35 +30,39 @@ namespace clonestl
 		{
 			return _capacity;
 		}
+		void reserve(const unsigned int new_cap)
+		{
+			if(new_cap > _capacity)
+				reallocVector(new_cap);
+		}
+		void shrink_to_size()
+		{
+			reallocVector(_size);
+		}
 
-		T& operator[](const unsigned int pos_)
+		T& operator[](const unsigned int pos)
 		{
-			return _data[pos_];
+			return _data[pos];
 		}
-		void print()
-		{
-			for (unsigned int i = 0; i < _size; i++)
-			{
-				std::cout << _data[i] << ", ";
-			}
-			std::cout << std::endl;
-		}
+		
 	private:
 		void expand()
 		{
 			if (_capacity > 0)
+				reallocVector(_capacity * 2);
+			else
+				reallocVector(1);
+		}
+		void reallocVector(const unsigned int new_cap)
+		{
+			if (new_cap >= _size)
 			{
-				_capacity = _capacity * 2;
-				T* dataNew = new T[_capacity];
+				T* dataNew = new T[new_cap];
 				for (unsigned int i = 0; i < _size; i++)
 					dataNew[i] = _data[i];
 				delete[] _data;
 				_data = dataNew;
-			}
-			else
-			{
-				_capacity = 1;
-				_data = new T[_capacity];
+				_capacity = new_cap;
 			}
 		}
 		bool isFilled()
